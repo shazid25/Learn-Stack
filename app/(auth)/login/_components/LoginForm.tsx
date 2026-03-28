@@ -26,43 +26,70 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
 
+  // Email validation
+  const isValidEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   async function signInWithGithub() {
     startGithubTransition(async () => {
-      await authClient.signIn.social({
-        provider: "github",
-        callbackURL: "/",
-        fetchOptions: {
-          onSuccess: () => {
-            toast.success("Signed in with Github, you will be redirected...");
+      try {
+        await authClient.signIn.social({
+          provider: "github",
+          callbackURL: "/",
+          fetchOptions: {
+            onSuccess: () => {
+              toast.success("Signed in with Github!");
+              router.push("/");
+            },
+            onError: (err: any) => {
+              toast.error(err?.error?.message || "Failed to sign in with Github");
+            },
           },
-          onError: () => {
-            toast.error("Failed to sign in with Github");
-          },
-        },
-      });
+        });
+      } catch (error: any) {
+        toast.error("Failed to sign in with Github");
+      }
     });
   }
 
   async function signInWithGoogle() {
     startGoogleTransition(async () => {
-      await authClient.signIn.social({
-        provider: "google",
-        callbackURL: "/",
-        fetchOptions: {
-          onSuccess: () => {
-            toast.success("Signed in with Google, you will be redirected...");
+      try {
+        await authClient.signIn.social({
+          provider: "google",
+          callbackURL: "/",
+          fetchOptions: {
+            onSuccess: () => {
+              toast.success("Signed in with Google!");
+              router.push("/");
+            },
+            onError: (err: any) => {
+              toast.error(err?.error?.message || "Failed to sign in with Google");
+            },
           },
-          onError: () => {
-            toast.error("Failed to sign in with Google");
-          },
-        },
-      });
+        });
+      } catch (error: any) {
+        toast.error("Failed to sign in with Google");
+      }
     });
   }
 
   async function handleEmailAuth() {
-    if (!email || !password) {
-      toast.error("Please enter email and password");
+    // Validation
+    if (!email.trim()) {
+      toast.error("Please enter your email");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    if (!password || password.length < 6) {
+      toast.error("Password must be at least 6 characters");
       return;
     }
 
@@ -70,42 +97,36 @@ export default function LoginForm() {
       try {
         if (isSignUp) {
           // Sign up
-          await authClient.signUp.email(
-            {
-              email,
-              password,
-              name: email.split("@")[0],
-            },
-            {
-              onSuccess: () => {
-                toast.success("Account created successfully! Redirecting...");
-                router.push("/");
-              },
-              onError: (err) => {
-                toast.error(err.error?.message || "Failed to create account");
-              },
-            }
-          );
+          const response = await authClient.signUp.email({
+            email: email.trim().toLowerCase(),
+            password,
+            name: email.split("@")[0],
+          });
+
+          if (response.error) {
+            toast.error(response.error?.message || "Failed to create account");
+            return;
+          }
+
+          toast.success("Account created successfully!");
+          router.push("/");
         } else {
           // Sign in
-          await authClient.signIn.email(
-            {
-              email,
-              password,
-            },
-            {
-              onSuccess: () => {
-                toast.success("Signed in successfully! Redirecting...");
-                router.push("/");
-              },
-              onError: (err) => {
-                toast.error(err.error?.message || "Invalid email or password");
-              },
-            }
-          );
+          const response = await authClient.signIn.email({
+            email: email.trim().toLowerCase(),
+            password,
+          });
+
+          if (response.error) {
+            toast.error(response.error?.message || "Invalid email or password");
+            return;
+          }
+
+          toast.success("Signed in successfully!");
+          router.push("/");
         }
-      } catch (error) {
-        toast.error("An error occurred");
+      } catch (error: any) {
+        toast.error(error?.message || "An error occurred");
       }
     });
   }
@@ -126,7 +147,7 @@ export default function LoginForm() {
       <CardContent className="flex flex-col gap-4">
         {/* Social Login Buttons */}
         <Button
-          disabled={githubPending}
+          disabled={githubPending || googlePending || emailPending}
           onClick={signInWithGithub}
           className="w-full"
           variant="outline"
@@ -145,7 +166,7 @@ export default function LoginForm() {
         </Button>
 
         <Button
-          disabled={googlePending}
+          disabled={githubPending || googlePending || emailPending}
           onClick={signInWithGoogle}
           className="w-full"
           variant="outline"
@@ -172,14 +193,15 @@ export default function LoginForm() {
         {/* Email and Password Form */}
         <div className="grid gap-3">
           <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Email Address</Label>
             <Input
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               id="email"
               type="email"
-              placeholder="you@example.com"
-              disabled={emailPending}
+              placeholder="you@gmail.com"
+              disabled={emailPending || githubPending || googlePending}
+              autoComplete="email"
             />
           </div>
 
@@ -191,9 +213,10 @@ export default function LoginForm() {
               id="password"
               type="password"
               placeholder="••••••••"
-              disabled={emailPending}
+              disabled={emailPending || githubPending || googlePending}
+              autoComplete={isSignUp ? "new-password" : "current-password"}
               onKeyPress={(e) => {
-                if (e.key === "Enter") {
+                if (e.key === "Enter" && !emailPending) {
                   handleEmailAuth();
                 }
               }}
@@ -202,7 +225,7 @@ export default function LoginForm() {
 
           <Button
             onClick={handleEmailAuth}
-            disabled={emailPending || !email || !password}
+            disabled={emailPending || githubPending || googlePending}
             className="w-full"
           >
             {emailPending ? (
@@ -223,8 +246,13 @@ export default function LoginForm() {
             <>
               Already have an account?{" "}
               <button
-                onClick={() => setIsSignUp(false)}
-                className="text-primary hover:underline"
+                onClick={() => {
+                  setIsSignUp(false);
+                  setEmail("");
+                  setPassword("");
+                }}
+                className="text-primary hover:underline font-medium"
+                disabled={emailPending || githubPending || googlePending}
               >
                 Sign in
               </button>
@@ -233,8 +261,13 @@ export default function LoginForm() {
             <>
               Don't have an account?{" "}
               <button
-                onClick={() => setIsSignUp(true)}
-                className="text-primary hover:underline"
+                onClick={() => {
+                  setIsSignUp(true);
+                  setEmail("");
+                  setPassword("");
+                }}
+                className="text-primary hover:underline font-medium"
+                disabled={emailPending || githubPending || googlePending}
               >
                 Create one
               </button>

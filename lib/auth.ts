@@ -15,6 +15,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     autoSignInAfterSignUp: true,
+    minPasswordLength: 6,
   },
   socialProviders: {
     github: {
@@ -29,6 +30,14 @@ export const auth = betterAuth({
   callbacks: {
     async signInUser({ user }: { user: User }) {
       // Auto-verify email for all users
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { emailVerified: true },
+      });
+      return user;
+    },
+    async afterSignUpUser({ user }: { user: User }) {
+      // Auto-verify email after signup
       await prisma.user.update({
         where: { id: user.id },
         data: { emailVerified: true },
