@@ -432,3 +432,169 @@ export async function deleteChapter({
     };
   }
 }
+
+export async function publishCourse(
+  courseId: string
+): Promise<ApiResponse> {
+  const user = await requireAdmin();
+
+  try {
+    const req = await request();
+
+    const decision = await aj.protect(req, {
+      fingerprint: user.user.id,
+    });
+
+    if (decision.isDenied()) {
+      if (decision.reason.isRateLimit()) {
+        return {
+          status: "error",
+          message: "You have been blocked due to rate limiting",
+        };
+      } else {
+        return {
+          status: "error",
+          message: "You are not authorized to perform this action",
+        };
+      }
+    }
+
+    // Verify course exists and belongs to the user
+    const course = await prisma.course.findUnique({
+      where: {
+        id: courseId,
+        userId: user.user.id,
+      },
+      select: {
+        id: true,
+        status: true,
+        title: true,
+        chapter: {
+          select: {
+            id: true,
+            lessons: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!course) {
+      return {
+        status: "error",
+        message: "Course not found or you don't have permission to access it",
+      };
+    }
+
+    // Check if course has at least one chapter with at least one lesson
+    const hasContent = course.chapter.length > 0 && course.chapter.some(ch => ch.lessons.length > 0);
+    if (!hasContent) {
+      return {
+        status: "error",
+        message: "Course must have at least one chapter with lessons before publishing",
+      };
+    }
+
+    // Update course status to Published
+    await prisma.course.update({
+      where: {
+        id: courseId,
+        userId: user.user.id,
+      },
+      data: {
+        status: "Published",
+      },
+    });
+
+    revalidatePath("/admin/courses");
+    revalidatePath(`/admin/courses/${courseId}/edit`);
+
+    return {
+      status: "success",
+      message: `Course "${course.title}" published successfully!`,
+    };
+  } catch (error) {
+    console.error("Publish course error:", error);
+    return {
+      status: "error",
+      message: "Failed to publish course",
+    };
+  }
+}
+
+export async function unpublishCourse(
+  courseId: string
+): Promise<ApiResponse> {
+  const user = await requireAdmin();
+
+  try {
+    const req = await request();
+
+    const decision = await aj.protect(req, {
+      fingerprint: user.user.id,
+    });
+
+    if (decision.isDenied()) {
+      if (decision.reason.isRateLimit()) {
+        return {
+          status: "error",
+          message: "You have been blocked due to rate limiting",
+        };
+      } else {
+        return {
+          status: "error",
+          message: "You are not authorized to perform this action",
+        };
+      }
+    }
+
+    // Verify course exists and belongs to the user
+    const course = await prisma.course.findUnique({
+      where: {
+        id: courseId,
+        userId: user.user.id,
+      },
+      select: {
+        id: true,
+        status: true,
+        title: true,
+      },
+    });
+
+    if (!course) {
+      return {
+        status: "error",
+        message: "Course not found or you don't have permission to access it",
+      };
+    }
+
+    // Update course status back to Draft
+    await prisma.course.update({
+      where: {
+        id: courseId,
+        userId: user.user.id,
+      },
+      data: {
+        status: "Draft",
+      },
+    });
+
+    revalidatePath("/admin/courses");
+    revalidatePath(`/admin/courses/${courseId}/edit`);
+
+    return {
+      status: "success",
+      message: `Course "${course.title}" unpublished successfully!`,
+    };
+  } catch (error) {
+    console.error("Unpublish course error:", error);
+    return {
+      status: "error",
+      message: "Failed to unpublish course",
+    };
+  }
+}
+

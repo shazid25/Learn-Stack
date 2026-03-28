@@ -8,7 +8,7 @@ import {
   CourseSchemaType,
   courseStatus,
 } from "@/lib/zodSchemas";
-import { Loader2, PlusIcon, SparkleIcon } from "lucide-react";
+import { Loader2, PlusIcon, SparkleIcon, CheckCircle2, Circle } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -35,7 +35,7 @@ import { tryCatch } from "@/hooks/try-catch";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
-import { editCourse } from "../actions";
+import { editCourse, publishCourse, unpublishCourse } from "../actions";
 import { AdminCourseSingularType } from "@/app/data/admin/admin-get-course";
 
 interface iAppProps {
@@ -44,7 +44,9 @@ interface iAppProps {
 
 export function EditCourseForm({ data } : iAppProps) {
   const [pending, startTransition] = useTransition();
+  const [publishPending, setPublishPending] = useTransition();
   const router = useRouter();
+  const isPublished = data.status === "Published";
 
   const form = useForm<CourseSchemaType>({
     resolver: zodResolver(courseSchema),
@@ -80,6 +82,30 @@ export function EditCourseForm({ data } : iAppProps) {
       }
     });
   }
+
+  const handlePublish = () => {
+    setPublishPending(async () => {
+      const result = await publishCourse(data.id);
+      if (result.status === "success") {
+        toast.success(result.message);
+        router.refresh();
+      } else {
+        toast.error(result.message);
+      }
+    });
+  };
+
+  const handleUnpublish = () => {
+    setPublishPending(async () => {
+      const result = await unpublishCourse(data.id);
+      if (result.status === "success") {
+        toast.success(result.message);
+        router.refresh();
+      } else {
+        toast.error(result.message);
+      }
+    });
+  };
 
   return (
     <Form {...form}>
@@ -136,7 +162,7 @@ export function EditCourseForm({ data } : iAppProps) {
               <FormControl>
                 <Textarea
                   placeholder="Small Description"
-                  className="min-h-[120px]"
+                  className="min-h-30"
                   {...field}
                 />
               </FormControl>
@@ -284,18 +310,76 @@ export function EditCourseForm({ data } : iAppProps) {
           )}
         />
 
-        <Button type="submit" disabled={pending}>
-          {pending ? (
-            <>
-              Updating...
-              <Loader2 className="animate-spin ml-1" />
-            </>
-          ) : (
-            <>
-              Update Course <PlusIcon className="ml-1" size={16} />
-            </>
-          )}
-        </Button>
+        <div className="flex flex-col gap-3 pt-6">
+          <div className="flex items-center justify-between bg-muted/50 p-4 rounded-lg border">
+            <div className="flex items-center gap-2">
+              {isPublished ? (
+                <>
+                  <CheckCircle2 className="size-5 text-green-500" />
+                  <span className="text-sm font-semibold text-green-600 dark:text-green-400">Published</span>
+                </>
+              ) : (
+                <>
+                  <Circle className="size-5 text-amber-500" />
+                  <span className="text-sm font-semibold text-amber-600 dark:text-amber-400">Draft</span>
+                </>
+              )}
+            </div>
+            {isPublished ? (
+              <Button 
+                type="button" 
+                variant="outline"
+                onClick={handleUnpublish}
+                disabled={publishPending}
+                className="gap-2"
+              >
+                {publishPending ? (
+                  <>
+                    Unpublishing...
+                    <Loader2 className="animate-spin size-4" />
+                  </>
+                ) : (
+                  <>
+                    Unpublish
+                  </>
+                )}
+              </Button>
+            ) : (
+              <Button 
+                type="button" 
+                variant="default"
+                onClick={handlePublish}
+                disabled={publishPending}
+                className="gap-2"
+              >
+                {publishPending ? (
+                  <>
+                    Publishing...
+                    <Loader2 className="animate-spin size-4" />
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="size-4" />
+                    Publish
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
+
+          <Button type="submit" disabled={pending}>
+            {pending ? (
+              <>
+                Updating...
+                <Loader2 className="animate-spin ml-1" />
+              </>
+            ) : (
+              <>
+                Update Course <PlusIcon className="ml-1" size={16} />
+              </>
+            )}
+          </Button>
+        </div>
       </form>
     </Form>
   );

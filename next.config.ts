@@ -34,7 +34,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: "learn-tack.t3.tigrisbucket.io",
+        hostname: "learn-stack.t3.storageapi.dev",
         port: "",
         protocol: "https",
       },

@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     });
 
     if (decision.isDenied()) {
-      return NextResponse.json({ error: "dudde not good" }, { status: 429 });
+      return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
     }
 
     const body = await request.json();
@@ -40,20 +40,38 @@ export async function POST(request: Request) {
     const validation = fileUploadSchema.safeParse(body);
 
     if (!validation.success) {
+      console.error("Validation errors:", validation.error);
       return NextResponse.json(
-        { error: "Invalid Request Body" },
+        { error: "Invalid Request Body", details: validation.error.message },
         { status: 400 }
       );
     }
 
-    const { fileName, contentType, size } = validation.data;
+    const { fileName, contentType, size, isImage } = validation.data;
+
+    // Validate file type
+    if (isImage && !contentType.startsWith("image/")) {
+      return NextResponse.json(
+        { error: "Invalid file type. Only images are allowed" },
+        { status: 400 }
+      );
+    }
+
+    // Validate bucket name exists
+    const bucketName = process.env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES;
+    if (!bucketName) {
+      console.error("S3 bucket name not configured");
+      return NextResponse.json(
+        { error: "Server configuration error" },
+        { status: 500 }
+      );
+    }
 
     const uniqueKey = `${uuidv4()}-${fileName}`;
 
     const command = new PutObjectCommand({
-      Bucket: process.env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES as string,
+      Bucket: bucketName,
       ContentType: contentType,
-      ContentLength: size,
       Key: uniqueKey,
     });
 
@@ -67,9 +85,10 @@ export async function POST(request: Request) {
     };
 
     return NextResponse.json(response);
-  } catch {
+  } catch (error) {
+    console.error("S3 upload error:", error);
     return NextResponse.json(
-      { error: "Failed to generate presigned URL" },
+      { error: "Failed to generate presigned URL", details: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }

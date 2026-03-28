@@ -56,7 +56,7 @@ interface SortableItemProps {
   };
 }
 
-export function CourseStrucutre({ data }: iAppProps) {
+export function CourseStructure({ data }: iAppProps) {
   const initialItems =
     data.chapter.map((chapter) => ({
       id: chapter.id,
