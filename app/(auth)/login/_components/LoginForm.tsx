@@ -32,6 +32,18 @@ export default function LoginForm() {
     return emailRegex.test(email);
   };
 
+  async function getRedirectUrl() {
+    try {
+      const session = await authClient.getSession();
+      if (session?.data?.user?.role === "admin") {
+        return "/admin";
+      }
+      return "/";
+    } catch (error) {
+      return "/";
+    }
+  }
+
   async function signInWithGithub() {
     startGithubTransition(async () => {
       try {
@@ -39,9 +51,10 @@ export default function LoginForm() {
           provider: "github",
           callbackURL: "/",
           fetchOptions: {
-            onSuccess: () => {
+            onSuccess: async () => {
               toast.success("Signed in with Github!");
-              router.push("/");
+              const redirectUrl = await getRedirectUrl();
+              router.push(redirectUrl);
             },
             onError: (err: any) => {
               toast.error(err?.error?.message || "Failed to sign in with Github");
@@ -61,9 +74,10 @@ export default function LoginForm() {
           provider: "google",
           callbackURL: "/",
           fetchOptions: {
-            onSuccess: () => {
+            onSuccess: async () => {
               toast.success("Signed in with Google!");
-              router.push("/");
+              const redirectUrl = await getRedirectUrl();
+              router.push(redirectUrl);
             },
             onError: (err: any) => {
               toast.error(err?.error?.message || "Failed to sign in with Google");
@@ -109,7 +123,8 @@ export default function LoginForm() {
           }
 
           toast.success("Account created successfully!");
-          router.push("/");
+          const redirectUrl = await getRedirectUrl();
+          router.push(redirectUrl);
         } else {
           // Sign in
           const response = await authClient.signIn.email({
@@ -123,7 +138,8 @@ export default function LoginForm() {
           }
 
           toast.success("Signed in successfully!");
-          router.push("/");
+          const redirectUrl = await getRedirectUrl();
+          router.push(redirectUrl);
         }
       } catch (error: any) {
         toast.error(error?.message || "An error occurred");

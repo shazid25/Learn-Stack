@@ -17,8 +17,7 @@ import { NextRequest } from "next/server";
 
 const emailOptions = {
   mode: "DRY_RUN", // Use DRY_RUN to not block, only log
-  // Block emails that are disposable, invalid, or have no MX records
-  block: ["DISPOSABLE"],
+  deny: ["DISPOSABLE"], // Only deny disposable emails
 } satisfies EmailOptions;
 
 const botOptions = {

@@ -1,10 +1,25 @@
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { SiteHeader } from "@/components/sidebar/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 import { ReactNode } from "react";
 
-export default function Adminlayout({ children }: { children: ReactNode }) {
+export default async function Adminlayout({ children }: { children: ReactNode }) {
+  const session = await auth.api.getSession({
+    headers: {
+      cookie: (await import("next/headers")).cookies().toString(),
+    },
+  });
+
+  if (!session?.user) {
+    redirect("/login");
+  }
+
+  if (session?.user?.role !== "admin") {
+    redirect("/");
+  }
   return (
     <SidebarProvider
       style={

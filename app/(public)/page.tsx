@@ -1,6 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 import Link from "next/link";
 
@@ -37,7 +39,16 @@ const features: featuresProps[] = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth.api.getSession({
+    headers: {
+      cookie: (await import("next/headers")).cookies().toString(),
+    },
+  });
+
+  if (session?.user?.role === "admin") {
+    redirect("/admin");
+  }
   return (
     <>
       <section className="relative py-20">
