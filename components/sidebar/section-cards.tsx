@@ -1,5 +1,6 @@
 import {
   IconBook,
+  IconCurrencyDollar,
   IconPlaylistX,
   IconShoppingCart,
   IconUsers,
@@ -15,9 +16,10 @@ import {
 import { adminGetDashobardStats } from "@/app/data/admin/admin-get-dashobard-stats";
 
 export async function SectionCards() {
-  const {totalCourses, totalCustomers, totalLessons, totalSignups} = await adminGetDashobardStats()
+  const { totalCourses, totalCustomers, totalLessons, totalSignups, totalEarnings } =
+    await adminGetDashobardStats();
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-5">
       <Card className="@container/card">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <div>
@@ -83,6 +85,24 @@ export async function SectionCards() {
           <p className="text-muted-foreground">
             Total Learning conents available
           </p>
+        </CardFooter>
+      </Card>
+
+      <Card className="@container/card">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <div>
+            <CardDescription>Total Earnings</CardDescription>
+            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+              {new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+              }).format(totalEarnings / 100)}
+            </CardTitle>
+          </div>
+          <IconCurrencyDollar className="size-6 text-muted-foreground" />
+        </CardHeader>
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          <p className="text-muted-foreground">Total revenue generated</p>
         </CardFooter>
       </Card>
     </div>

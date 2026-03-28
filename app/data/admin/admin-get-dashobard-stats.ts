@@ -5,7 +5,7 @@ import { requireAdmin } from "./require-admin";
 export async function adminGetDashobardStats() {
     await requireAdmin()
 
-    const [totalSignups, totalCustomers, totalCourses, totalLessons] = await Promise.all([
+    const [totalSignups, totalCustomers, totalCourses, totalLessons, totalEarnings] = await Promise.all([
         //total signups
         prisma.user.count(),
 
@@ -23,12 +23,23 @@ export async function adminGetDashobardStats() {
 
          //total lessons
          prisma.lesson.count(),
+
+         //total earnings
+         prisma.enrollment.aggregate({
+             where:{
+                 status: "Active"
+             },
+             _sum:{
+                 amount: true
+             }
+         })
     ])
 
     return {
         totalSignups,
         totalCustomers,
         totalCourses,
-        totalLessons
+        totalLessons,
+        totalEarnings: totalEarnings._sum.amount ?? 0
     }
 }
