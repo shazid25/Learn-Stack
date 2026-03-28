@@ -634,5 +634,7 @@ We're grateful to the amazing open-source community:
 **Built with ❤️ for educators and learners worldwide**
 
 </div>
-#   L e a r n - S t a c k  
+#   L e a r n - S t a c k 
  
+ 
+

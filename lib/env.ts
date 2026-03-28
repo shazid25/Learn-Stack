@@ -14,8 +14,6 @@
 //   experimental__runtimeEnv: {},
 // });
 
-
-
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
@@ -39,7 +37,7 @@ export const env = createEnv({
     STRIPE_SECRET_KEY: z.string().min(1),
     STRIPE_WEBHOOK_SECRET: z.string().min(1),
     
-    // AWS / R2 (Updated from your image)
+    // AWS / R2
     AWS_ACCESS_KEY_ID: z.string().min(1),
     AWS_SECRET_ACCESS_KEY: z.string().min(1),
     AWS_S3_BUCKET_NAME: z.string().min(1),
@@ -49,27 +47,31 @@ export const env = createEnv({
   },
 
   client: {
+    NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES: z.string().min(1),
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().min(1),
   },
 
-  runtimeEnv: {
-    NODE_ENV: process.env.NODE_ENV,
-    DATABASE_URL: process.env.DATABASE_URL,
-    BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
-    BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
-    AUTH_GITHUB_CLIENT_ID: process.env.AUTH_GITHUB_CLIENT_ID,
-    AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
-    RESEND_API_KEY: process.env.RESEND_API_KEY,
-    FROM_EMAIL: process.env.FROM_EMAIL,
-    ARCJET_KEY: process.env.ARCJET_KEY,
-    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
-    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+  /**
+   * experimental__runtimeEnv is required for the Next.js Edge runtime 
+   * and for variables to be available in the browser.
+   */
+  experimental__runtimeEnv: {
+   
+
+    // Client-side (These WILL be available in the browser)
+    NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES: process.env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
-    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-    AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME,
-    AWS_ENDPOINT_URL_S3: process.env.AWS_ENDPOINT_URL_S3,
-    AWS_ENDPOINT_URL_IAM: process.env.AWS_ENDPOINT_URL_IAM,
-    AWS_REGION: process.env.AWS_REGION,
   },
+
+  /**
+   * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
+   * This is especially useful for Docker builds.
+   */
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
+
+  /**
+   * Makes it so that empty strings are treated as undefined.
+   * z.string().min(1) will then throw an error, which is the desired behavior.
+   */
+  emptyStringAsUndefined: true,
 });
