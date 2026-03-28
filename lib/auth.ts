@@ -2,35 +2,41 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./db";
-// import { env } from "./env";
-import { emailOTP } from "better-auth/plugins";
-import { resend } from "./resend";
 import { admin } from "better-auth/plugins"
+import type { User } from "./generated/prisma"
 
 
 export const auth = betterAuth({
+  baseURL: process.env.BETTER_AUTH_URL,
+  secret: process.env.BETTER_AUTH_SECRET,
   database: prismaAdapter(prisma, {
-    provider: "postgresql", // or "mysql", "postgresql", ...etc
+    provider: "postgresql",
   }),
+  emailAndPassword: {
+    enabled: true,
+    autoSignInAfterSignUp: true,
+  },
   socialProviders: {
     github: {
-      // clientId: env.AUTH_GITHUB_CLIENT_ID,
-      // clientSecret: env.AUTH_GITHUB_SECRET,
       clientId: process.env.AUTH_GITHUB_CLIENT_ID as string,
       clientSecret: process.env.AUTH_GITHUB_SECRET as string,
     },
+    google: {
+      clientId: process.env.AUTH_GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.AUTH_GOOGLE_CLIENT_SECRET as string,
+    },
+  },
+  callbacks: {
+    async signInUser({ user }: { user: User }) {
+      // Auto-verify email for all users
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { emailVerified: true },
+      });
+      return user;
+    },
   },
   plugins: [
-    emailOTP({
-      async sendVerificationOTP({ email, otp }) {
-        await resend.emails.send({
-          from: "Learn Stack <onboarding@resend.dev>",
-          to: [email],
-          subject: "Learn Stack - Verify your email",
-          html: `<p>Your OTP is <strong>${otp}</strong></p>`,
-        });
-      },
-    }),
     admin(),
   ],
 });

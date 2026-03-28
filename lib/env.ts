@@ -27,6 +27,8 @@ export const env = createEnv({
     BETTER_AUTH_URL: z.string().url(),
     AUTH_GITHUB_CLIENT_ID: z.string().min(1),
     AUTH_GITHUB_SECRET: z.string().min(1),
+    AUTH_GOOGLE_CLIENT_ID: z.string().min(1),
+    AUTH_GOOGLE_CLIENT_SECRET: z.string().min(1),
     
     // Services
     RESEND_API_KEY: z.string().min(1),
@@ -49,6 +51,7 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES: z.string().min(1),
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().min(1),
+    NEXT_PUBLIC_AUTH_URL: z.string().url(),
   },
 
   /**
@@ -61,6 +64,7 @@ export const env = createEnv({
     // Client-side (These WILL be available in the browser)
     NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES: process.env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+    NEXT_PUBLIC_AUTH_URL: process.env.NEXT_PUBLIC_AUTH_URL,
   },
 
   /**
