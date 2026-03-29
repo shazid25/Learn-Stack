@@ -38,6 +38,14 @@ export async function adminGetCourse(id: string) {
               }
             }
           }
+        },
+        projects: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            createdAt: true,
+          }
         }
     }
   });

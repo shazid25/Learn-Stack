@@ -17,6 +17,8 @@ export async function getIndividualCourse(slug: string) {
       level: true,
       category: true,
       smallDescription: true,
+      stripePriceId: true,
+      status: true,
       chapter: {
         select: {
           id: true,

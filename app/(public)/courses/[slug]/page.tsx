@@ -24,7 +24,7 @@ import { EnrollmentButton } from "./_components/EnrollmentButton";
 import { buttonVariants } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 type Params = Promise<{ slug: string }>;
 
@@ -33,12 +33,13 @@ export default async function SlugPage({ params }: { params: Params }) {
     headers: await headers(),
   });
 
-  if (!session) {
-    return redirect("/login");
-  }
-
   const { slug } = await params;
   const course = await getIndividualCourse(slug);
+
+  if (!course || course.status !== "Published") {
+    return notFound();
+  }
+
   const isEnrolled = await checkIfCourseBought(course.id);
 
   return (
@@ -267,10 +268,24 @@ export default async function SlugPage({ params }: { params: Params }) {
                 </ul>
               </div>
 
-              {isEnrolled ? (
-                <Link className={buttonVariants({ className: 'w-full'})} href="/dashboard">Watch Course</Link>
+              {session ? (
+                isEnrolled ? (
+                  <Link
+                    className={buttonVariants({ className: "w-full" })}
+                    href="/dashboard"
+                  >
+                    Watch Course
+                  </Link>
+                ) : (
+                  <EnrollmentButton courseId={course.id} />
+                )
               ) : (
-                <EnrollmentButton courseId={course.id} />
+                <Link
+                  className={buttonVariants({ className: "w-full" })}
+                  href="/login"
+                >
+                  Login to Enroll
+                </Link>
               )}
 
               <p className="mt-3 text-center text-xs text-muted-foreground">

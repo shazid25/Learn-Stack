@@ -9,6 +9,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EditCourseForm } from "./_components/EditCourseForm";
 import { CourseStructure } from "./_components/CourseStructure";
+import { CourseProjects } from "./_components/CourseProjects";
 
 type Params = Promise<{ courseId: string }>;
 
@@ -23,9 +24,10 @@ export default async function EditRoute({ params }: { params: Params }) {
       </h1>
 
       <Tabs defaultValue="basic-info" className="w-full">
-        <TabsList className="grid grid-cols-2 w-full">
+        <TabsList className="grid grid-cols-3 w-full">
           <TabsTrigger value="basic-info">Basic Info</TabsTrigger>
           <TabsTrigger value="course-structure">Course Structure</TabsTrigger>
+          <TabsTrigger value="projects">Projects</TabsTrigger>
         </TabsList>
 
         <TabsContent value="basic-info">
@@ -52,6 +54,20 @@ export default async function EditRoute({ params }: { params: Params }) {
             </CardHeader>
             <CardContent>
               <CourseStructure data={data}/>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="projects">
+          <Card>
+            <CardHeader>
+              <CardTitle>Course Projects</CardTitle>
+              <CardDescription>
+                Manage projects for this course that students need to complete.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <CourseProjects data={data} />
             </CardContent>
           </Card>
         </TabsContent>
