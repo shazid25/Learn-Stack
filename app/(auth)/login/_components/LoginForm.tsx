@@ -44,7 +44,7 @@ export default function LoginForm() {
         return "/admin";
       }
       return "/";
-    } catch (error) {
+    } catch {
       return "/";
     }
   }
@@ -61,12 +61,12 @@ export default function LoginForm() {
               const redirectUrl = await getRedirectUrl();
               router.push(redirectUrl);
             },
-            onError: (err: any) => {
+            onError: (err: { error?: { message?: string } }) => {
               toast.error(err?.error?.message || "Failed to sign in with Github");
             },
           },
         });
-      } catch (error: any) {
+      } catch {
         toast.error("Failed to sign in with Github");
       }
     });
@@ -84,12 +84,12 @@ export default function LoginForm() {
               const redirectUrl = await getRedirectUrl();
               router.push(redirectUrl);
             },
-            onError: (err: any) => {
+            onError: (err: { error?: { message?: string } }) => {
               toast.error(err?.error?.message || "Failed to sign in with Google");
             },
           },
         });
-      } catch (error: any) {
+      } catch {
         toast.error("Failed to sign in with Google");
       }
     });
@@ -149,8 +149,9 @@ export default function LoginForm() {
           const redirectUrl = await getRedirectUrl();
           router.push(redirectUrl);
         }
-      } catch (error: any) {
-        toast.error(error?.message || "An error occurred");
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : "An error occurred";
+        toast.error(errorMessage);
       }
     });
   }
@@ -345,7 +346,7 @@ export default function LoginForm() {
             ) : (
               <div className="space-y-2">
                 <p className="text-gray-600">
-                  Don't have an account?{" "}
+                  Don&apos;t have an account?{" "}
                   <button
                     onClick={() => {
                       setIsSignUp(true);

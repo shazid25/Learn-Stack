@@ -24,7 +24,7 @@ import { EnrollmentButton } from "./_components/EnrollmentButton";
 import { buttonVariants } from "@/components/ui/button";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 type Params = Promise<{ slug: string }>;
 

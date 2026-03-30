@@ -49,7 +49,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { fileName, contentType, size, isImage } = validation.data;
+    const { fileName, contentType, isImage } = validation.data;
 
     // Validate file type
     if (isImage && !contentType.startsWith("image/")) {

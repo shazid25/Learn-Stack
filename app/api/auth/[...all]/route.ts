@@ -4,21 +4,13 @@ import ip from "@arcjet/ip";
 import {
   type ArcjetDecision,
   type BotOptions,
-  type EmailOptions,
-  type ProtectSignupOptions,
   type SlidingWindowRateLimitOptions,
   detectBot,
-  protectSignup,
   slidingWindow,
 } from "@arcjet/next";
 
 import { toNextJsHandler } from "better-auth/next-js";
 import { NextRequest } from "next/server";
-
-const emailOptions = {
-  mode: "DRY_RUN", // Use DRY_RUN to not block, only log
-  deny: ["DISPOSABLE"], // Only deny disposable emails
-} satisfies EmailOptions;
 
 const botOptions = {
   mode: "LIVE",
@@ -32,15 +24,6 @@ const rateLimitOptions = {
   interval: "2m", // counts requests over a 2 minute sliding window
   max: 5, // allows 5 submissions within the window
 } satisfies SlidingWindowRateLimitOptions<[]>;
-
-const signupOptions = {
-  email: emailOptions,
-  // uses a sliding window rate limit
-  bots: botOptions,
-  // It would be unusual for a form to be submitted more than 5 times in 10
-  // minutes from the same IP address
-  rateLimit: rateLimitOptions,
-} satisfies ProtectSignupOptions<[]>;
 
 async function protect(req: NextRequest): Promise<ArcjetDecision> {
   const session = await auth.api.getSession({

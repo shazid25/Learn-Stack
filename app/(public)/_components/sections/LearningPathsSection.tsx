@@ -1,4 +1,4 @@
-import { CheckCircle, Clock, Users as UsersIcon } from "lucide-react";
+import { Clock, Users as UsersIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { getPopularCourses } from "@/app/data/public/get-popular-courses";

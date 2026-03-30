@@ -18,8 +18,14 @@ import { adminGetDashobardStats } from "@/app/data/admin/admin-get-dashobard-sta
 export async function SectionCards() {
   const { totalCourses, totalCustomers, totalLessons, totalSignups, totalEarnings } =
     await adminGetDashobardStats();
+
+  // Format earnings - it's in cents from Stripe
+  const formattedEarnings = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format((totalEarnings || 0) / 100);
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-5">
+    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-5">
       <Card className="@container/card">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <div>
@@ -93,10 +99,7 @@ export async function SectionCards() {
           <div>
             <CardDescription>Total Earnings</CardDescription>
             <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-              {new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-              }).format(totalEarnings / 100)}
+              {formattedEarnings}
             </CardTitle>
           </div>
           <IconCurrencyDollar className="size-6 text-muted-foreground" />

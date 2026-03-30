@@ -5,7 +5,7 @@ import { requireAdmin } from "./require-admin";
 export async function adminGetDashobardStats() {
     await requireAdmin()
 
-    const [totalSignups, totalCustomers, totalCourses, totalLessons, totalEarnings] = await Promise.all([
+    const [totalSignups, totalCustomers, totalCourses, totalLessons, totalEarningsData] = await Promise.all([
         //total signups
         prisma.user.count(),
 
@@ -24,10 +24,13 @@ export async function adminGetDashobardStats() {
          //total lessons
          prisma.lesson.count(),
 
-         //total earnings
+         //total earnings - sum all Active enrollment amounts
          prisma.enrollment.aggregate({
              where:{
-                 status: "Active"
+                 status: "Active",
+                 amount: {
+                     gt: 0  // Only count positive amounts
+                 }
              },
              _sum:{
                  amount: true
@@ -35,11 +38,13 @@ export async function adminGetDashobardStats() {
          })
     ])
 
+    const totalEarnings = totalEarningsData._sum.amount ?? 0
+
     return {
         totalSignups,
         totalCustomers,
         totalCourses,
         totalLessons,
-        totalEarnings: totalEarnings._sum.amount ?? 0
+        totalEarnings
     }
 }

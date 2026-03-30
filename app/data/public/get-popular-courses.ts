@@ -24,7 +24,7 @@ export async function getPopularCourses() {
       },
     });
 
-    return courses.map((course: any) => ({
+    return courses.map((course) => ({
       id: course.id,
       title: course.title,
       description: course.smallDescription || course.description,

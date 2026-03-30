@@ -72,7 +72,7 @@ export default function TestimonialsSection() {
               </div>
 
               <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed text-sm group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors duration-300">
-                "{testimonial.content}"
+                &quot;{testimonial.content}&quot;
               </p>
 
               <div className="flex items-center gap-3">

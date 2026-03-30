@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { FileRejection, useDropzone } from "react-dropzone";
+import { useDropzone } from "react-dropzone";
 import { Card, CardContent } from "../ui/card";
 import { cn } from "@/lib/utils";
 import {
@@ -99,9 +99,10 @@ export function Uploader({ value, onChange, fileTypeAccepted }: iAppProps) {
           xhr.setRequestHeader("Content-Type", file.type);
           xhr.send(file);
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : "Something went wrong";
         console.error("Upload Error:", error);
-        toast.error(error.message || "Something went wrong");
+        toast.error(errorMessage);
         setFileState((prev) => ({ ...prev, uploading: false, error: true }));
       }
     },
