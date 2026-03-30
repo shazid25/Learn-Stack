@@ -40,8 +40,12 @@ export async function getIndividualCourse(slug: string) {
     },
   });
 
-
   if(!course){
+    return notFound()
+  }
+
+  // Only return published courses
+  if(course.status !== "Published"){
     return notFound()
   }
 

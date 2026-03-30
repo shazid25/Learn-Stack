@@ -10,7 +10,8 @@ import { requireAdmin } from "@/app/data/admin/require-admin";
 const fileUploadSchema = z.object({
   fileName: z.string().min(1, { message: "File name is required" }),
   contentType: z.string().min(1, { message: "Content type is required" }),
-  size: z.number().min(1, { message: "Size is required" }),
+  // size is optional on the server side; client should send it, but we don't require it
+  size: z.number().min(1).optional(),
   isImage: z.boolean(),
 });
 
@@ -35,9 +36,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
     }
 
-    const body = await request.json();
+  const body = await request.json();
+  console.debug("S3 upload request body:", body);
 
-    const validation = fileUploadSchema.safeParse(body);
+  const validation = fileUploadSchema.safeParse(body);
 
     if (!validation.success) {
       console.error("Validation errors:", validation.error);
