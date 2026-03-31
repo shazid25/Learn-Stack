@@ -2,7 +2,8 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./db";
-import { admin } from "better-auth/plugins"
+import { admin, emailOTP } from "better-auth/plugins"
+import { resend } from "./resend";
 import type { User } from "./generated/prisma"
 
 
@@ -47,5 +48,15 @@ export const auth = betterAuth({
   },
   plugins: [
     admin(),
+    emailOTP({
+      sendVerificationOTP: async ({ email, otp }) => {
+        await resend.emails.send({
+          from: "onboarding@resend.dev",
+          to: email,
+          subject: "Your OTP Code",
+          html: `Your verification code is: <strong>${otp}</strong>`,
+        });
+      },
+    }),
   ],
 });
