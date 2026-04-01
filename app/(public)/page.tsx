@@ -8,6 +8,10 @@ import SpecialtiesSection from "./_components/sections/SpecialtiesSection";
 import TestimonialsSection from "./_components/sections/TestimonialsSection";
 import LearningPathsSection from "./_components/sections/LearningPathsSection";
 import CTASection from "./_components/sections/CTASection";
+import { AnimatedText } from "@/components/animations/AnimatedText";
+import { ScrollReveal } from "@/components/animations/ScrollReveal";
+import { CardReveal } from "@/components/animations/CardReveal";
+import { LenisScroll } from "@/components/animations/LenisScroll";
 
 import Link from "next/link";
 
@@ -56,10 +60,9 @@ export default async function Home() {
     redirect("/admin");
   }
   return (
-    <>
+    <LenisScroll>
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 bg-linear-to-b from-blue-50 to-white dark:from-slate-900 dark:to-slate-950 transition-colors duration-300 overflow-hidden">
-        {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-200 dark:bg-blue-900/30 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
           <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-purple-200 dark:bg-purple-900/30 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float delay-4000"></div>
@@ -67,39 +70,51 @@ export default async function Home() {
         </div>
 
         <div className="container relative z-10 flex flex-col items-center text-center space-y-8 px-4 md:px-6 lg:px-8">
-          <Badge variant="outline" className="animate-slide-down">🌟 The Future of Online Education</Badge>
+          <ScrollReveal delay={0} direction="up">
+            <Badge variant="outline" className="inline-block">🌟 The Future of Online Education</Badge>
+          </ScrollReveal>
           
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 dark:text-white animate-slide-up delay-100">
-            Elevate your <span className="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Learning Experience</span>
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <AnimatedText
+              className="block"
+              variant="words"
+              delay={0.2}
+            >
+              Elevate your Learning Experience
+            </AnimatedText>
           </h1>
           
-          <p className="max-w-2xl text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed animate-slide-up delay-150">
-            Discover a new way to learn with our modern, interactive management
-            system. Access high-quality courses anytime, anywhere with expert instructors.
-          </p>
+          <ScrollReveal delay={0.3} direction="up" blur={true}>
+            <p className="max-w-2xl text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
+              Discover a new way to learn with our modern, interactive management
+              system. Access high-quality courses anytime, anywhere with expert instructors.
+            </p>
+          </ScrollReveal>
           
-          <div className="flex flex-col sm:flex-row gap-4 mt-8 md:mt-12 animate-slide-up delay-200">
-            <Link
-              href="/courses"
-              className={buttonVariants({
-                size: "lg",
-              }) + " bg-blue-600 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"}
-            >
-              Explore Courses
-            </Link>
-
-            {!session?.user && (
+          <ScrollReveal delay={0.4} direction="up" scale={true}>
+            <div className="flex flex-col sm:flex-row gap-4 mt-8 md:mt-12">
               <Link
-                href="/login"
+                href="/courses"
                 className={buttonVariants({
                   size: "lg",
-                  variant: "outline",
-                }) + " hover:scale-105 transform transition-all duration-300 hover:shadow-lg dark:border-slate-700 dark:hover:bg-slate-800"}
+                }) + " bg-blue-600 dark:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-700 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"}
               >
-                Sign In
+                Explore Courses
               </Link>
-            )}
-          </div>
+
+              {!session?.user && (
+                <Link
+                  href="/login"
+                  className={buttonVariants({
+                    size: "lg",
+                    variant: "outline",
+                  }) + " hover:scale-105 transform transition-all duration-300 hover:shadow-lg dark:border-slate-700 dark:hover:bg-slate-800"}
+                >
+                  Sign In
+                </Link>
+              )}
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -108,15 +123,23 @@ export default async function Home() {
         <div className="container mx-auto px-4 md:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {features.map((feature, index) => (
-              <Card key={index} className="hover:shadow-xl dark:hover:shadow-blue-900/30 transition-all duration-300 border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 bg-white dark:bg-slate-800 group animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
-                <CardHeader>
-                  <div className="text-4xl md:text-5xl mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 inline-block">{feature.icon}</div>
-                  <CardTitle className="text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-slate-600 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors duration-300">{feature.description}</p>
-                </CardContent>
-              </Card>
+              <CardReveal key={index} index={index} staggerDelay={0.15} className="hover:shadow-xl dark:hover:shadow-blue-900/30 transition-all duration-300">
+                <Card className="border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 bg-white dark:bg-slate-800 group h-full">
+                  <CardHeader>
+                    <ScrollReveal direction="up" className="text-4xl md:text-5xl mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 inline-block">
+                      {feature.icon}
+                    </ScrollReveal>
+                    <h3 className="text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 text-lg font-semibold">
+                      <AnimatedText className="block" variant="characters">
+                        {feature.title}
+                      </AnimatedText>
+                    </h3>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-slate-600 dark:text-slate-400 group-hover:text-slate-700 dark:group-hover:text-slate-300 transition-colors duration-300">{feature.description}</p>
+                  </CardContent>
+                </Card>
+              </CardReveal>
             ))}
           </div>
         </div>
@@ -136,7 +159,7 @@ export default async function Home() {
 
       {/* Section 6: CTA Section */}
       <CTASection />
-    </>
+    </LenisScroll>
   );
 }
 
