@@ -45,9 +45,10 @@ const features: featuresProps[] = [
 ];
 
 export default async function Home() {
+  const cookieStore = await (await import("next/headers")).cookies();
   const session = await auth.api.getSession({
     headers: {
-      cookie: (await import("next/headers")).cookies().toString(),
+      cookie: cookieStore.toString(),
     },
   });
 

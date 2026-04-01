@@ -6,9 +6,10 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
+  const cookieStore = await (await import("next/headers")).cookies();
   const session = await auth.api.getSession({
     headers: {
-      cookie: (await import("next/headers")).cookies().toString(),
+      cookie: cookieStore.toString(),
     },
   });
 
