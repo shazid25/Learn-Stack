@@ -88,15 +88,17 @@ export default async function Home() {
               Explore Courses
             </Link>
 
-            <Link
-              href="/login"
-              className={buttonVariants({
-                size: "lg",
-                variant: "outline",
-              }) + " hover:scale-105 transform transition-all duration-300 hover:shadow-lg dark:border-slate-700 dark:hover:bg-slate-800"}
-            >
-              Sign In
-            </Link>
+            {!session?.user && (
+              <Link
+                href="/login"
+                className={buttonVariants({
+                  size: "lg",
+                  variant: "outline",
+                }) + " hover:scale-105 transform transition-all duration-300 hover:shadow-lg dark:border-slate-700 dark:hover:bg-slate-800"}
+              >
+                Sign In
+              </Link>
+            )}
           </div>
         </div>
       </section>
