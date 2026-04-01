@@ -32,7 +32,7 @@ export async function getPopularCourses() {
       level: course.level,
       students: course.enrollment.length,
       modules: course.chapter.length,
-      price: `$${(course.price / 100).toFixed(0)}`,
+      price: `$${(course.price / 100).toFixed(2)}`,
       slug: course.slug,
     }));
   } catch (error) {
