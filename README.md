@@ -1,458 +1,313 @@
-# 🎓 Learn-Stack
 
-> A modern, production-ready Learning Management System with AI-powered features, real-time analytics, and enterprise-grade security.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Learn%20Stack-blue?style=for-the-badge&logo=vercel)](https://learn-stack-bot9.vercel.app/)
-[![GitHub](https://img.shields.io/badge/GitHub-shazid25/Learn--Stack-black?style=for-the-badge&logo=github)](https://github.com/shazid25/Learn-Stack)
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org)
-[![React](https://img.shields.io/badge/React-19-blue?style=flat-square&logo=react)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-06b6d4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791?style=flat-square&logo=postgresql)](https://www.postgresql.org)
-[![Stripe](https://img.shields.io/badge/Stripe-Payments-008CDD?style=flat-square&logo=stripe)](https://stripe.com)
+-----
 
----
+# 🎓 Learn-Stack: Enterprise Learning Management System
+
+\<div align="center"\>
+
+**The ultimate full-stack solution for modern educators, built with the T3 Stack philosophy.**
+
+[Explore Demo](https://learn-stack-bot9.vercel.app/) • [Report Bug](https://github.com/shazid25/Learn-Stack/issues) • [Request Feature](https://github.com/shazid25/Learn-Stack/issues)
+
+\</div\>
+
+-----
+
+## 📖 Table of Contents
+
+1.  [Overview](https://www.google.com/search?q=%23-overview)
+2.  [Core Architecture](https://www.google.com/search?q=%23-core-architecture)
+3.  [Deep Dive: Features](https://www.google.com/search?q=%23-deep-dive-features)
+4.  [Technical Stack](https://www.google.com/search?q=%23-technical-stack)
+5.  [Database Schema](https://www.google.com/search?q=%23-database-schema)
+6.  [Security Implementation](https://www.google.com/search?q=%23-security-implementation)
+7.  [Animation Engine](https://www.google.com/search?q=%23-animation-engine)
+8.  [Getting Started](https://www.google.com/search?q=%23-getting-started)
+9.  [API Reference](https://www.google.com/search?q=%23-api-reference)
+10. [Performance Benchmarks](https://www.google.com/search?q=%23-performance-benchmarks)
+11. [Contributing](https://www.google.com/search?q=%23-contributing)
+12. [License](https://www.google.com/search?q=%23-license)
+
+-----
 
 ## 🎯 Overview
 
-**Learn-Stack** is a comprehensive, production-ready Learning Management System designed for educators and course creators. It provides an all-in-one platform for creating, managing, monetizing, and delivering online courses with enterprise-grade features, immersive animations, and AI-powered capabilities.
+**Learn-Stack** isn't just another tutorial project; it is a high-performance, SEO-optimized, and secure platform designed to handle thousands of concurrent students. By leveraging **Next.js 16's Server Components** and **React 19's Actions**, it achieves a near-instantaneous user experience while maintaining a tiny client-side JavaScript footprint.
 
-### Why Learn-Stack?
+### Key Value Propositions:
 
-- ✅ **Production Ready** - Built with industry best practices and modern tech stack
-- ✅ **Fully Featured** - Complete ecosystem from authentication to payments to analytics
-- ✅ **Scalable Architecture** - Designed to grow from solo creators to enterprise platforms
-- ✅ **High-End UX** - Professional animations with Framer Motion and GSAP ScrollTrigger
-- ✅ **Developer Friendly** - Clean TypeScript code, comprehensive documentation
-- ✅ **Enterprise Security** - Rate limiting, DDoS protection, audit logging
-- ✅ **AI-Powered** - Smart analytics, course recommendations, content optimization
+  * **Zero Latency UI:** Utilizing optimistic updates and TanStack Table for data-heavy views.
+  * **Immersive Learning:** Integrated with GSAP and Framer Motion for a "premium" feel.
+  * **Secure Monetization:** Industrial-strength Stripe integration with webhook protection.
+  * **Developer First:** Type-safe from the database to the frontend using Prisma and Zod.
 
----
+-----
 
-## ✨ Key Features
+## 🏗️ Core Architecture
 
-### 🎓 Course Management
-- **Rich Course Creation** - Create courses with multimedia support (videos, documents, images)
-- **Content Organization** - Hierarchical structure (Courses → Chapters → Lessons → Content)
-- **Drag-and-Drop Ordering** - Intuitive lesson reordering with dnd-kit
-- **Media Management** - Direct AWS S3 integration for assets
-- **SEO Optimization** - Auto-generated slugs and metadata
-- **Course Status Tracking** - Draft, Published, Archived states
-- **Difficulty Levels** - Beginner, Intermediate, Advanced categorization
+The project follows a **Modular Monolith** pattern within the Next.js App Router, ensuring that concerns are separated while maintaining the speed of a single repository.
 
-### 👥 User Management & Authentication
-- **Multi-Auth Support** - Email/Password + OAuth (Google, GitHub, Apple)
-- **Email Verification** - Automated OTP verification with Resend
-- **Session Management** - Secure sessions with IP tracking
-- **Role-Based Access** - Admin and Student roles with fine-grained permissions
-- **User Banning** - Admin controls with expiration dates
-- **Stripe Customer Integration** - Linked billing information
+```mermaid
+graph TD
+    User((User)) -->|HTTPS| Vercel[Vercel Edge Network]
+    Vercel --> NextJS[Next.js App Router]
+    NextJS -->|Server Actions| Auth[Better-Auth]
+    NextJS -->|Queries| Prisma[Prisma ORM]
+    Prisma --> DB[(PostgreSQL - Neon)]
+    NextJS -->|Media| S3[AWS S3 Bucket]
+    NextJS -->|Security| Arcjet[Arcjet Shield]
+    NextJS -->|Payments| Stripe[Stripe API]
+```
 
-### 💳 Payments & Monetization
-- **Stripe Integration** - Full payment processing and subscriptions
-- **Per-Course Pricing** - Flexible pricing models
-- **Automated Billing** - Automatic product and price creation
-- **Webhook Processing** - Real-time payment status updates
-- **Enrollment Management** - Track course purchases and access
+-----
 
-### 📊 Analytics & Insights
-- **Real-Time Dashboard** - Course performance metrics
-- **User Analytics** - Enrollment tracking and engagement metrics
-- **Lesson Progress Tracking** - Student progress visualization
-- **Course Completion Stats** - Detailed completion analytics
-- **Revenue Insights** - Payment and subscription analytics
+## ✨ Deep Dive: Features
 
-### 🎬 Rich Media & Content
-- **Lesson Content Editor** - TipTap rich text editor with advanced formatting
-- **File Uploads** - Secure S3 integration for media files
-- **Progress Tracking** - Student lesson completion tracking
-- **Content Versioning** - Track content changes over time
+### 1\. Advanced Course Builder
 
-### 🎨 Immersive User Experience
-- **Advanced Animations** - Character reveal text, scroll triggers, magnetic buttons
-- **Smooth Scrolling** - Lenis momentum-based scrolling
-- **Spring Physics** - Card animations with Framer Motion
-- **Responsive Design** - Mobile-first Tailwind CSS layouts
-- **Dark Mode** - Built-in theme switching
+The "Instructor" experience is central to Learn-Stack.
 
-### 🔒 Security & Performance
-- **Arcjet Protection** - DDoS and bot protection
-- **Rate Limiting** - API endpoint protection
-- **Email Rate Limiting** - Prevent abuse
-- **Secure Authentication** - Better-Auth with encryption
-- **CORS Configuration** - Restricted API access
-- **Input Validation** - Zod schema validation
-- **GPU-Accelerated Animations** - 60fps performance
+  * **Dynamic Chapters:** Reorder lessons on the fly using `@dnd-kit/sortable`.
+  * **Rich Content:** Lessons support embedded videos, Markdown, and custom components via the TipTap editor.
+  * **Auto-Save:** Draft system ensures progress is never lost during creation.
 
----
+### 2\. Student Experience
 
-## 🛠️ Tech Stack
+  * **Adaptive Progress:** Real-time tracking of completed lessons with visual progress bars.
+  * **Seamless Payments:** One-click checkout powered by Stripe Elements.
+  * **Smart Dashboard:** Personalized recommendations based on enrollment history.
 
-### Frontend
-- **Next.js 16** - React framework with Turbopack
-- **React 19** - UI library
-- **TypeScript 5** - Type safety
-- **Tailwind CSS 4** - Utility-first styling
-- **Framer Motion** - Animation library
-- **GSAP** - Advanced animations with ScrollTrigger
-- **React Hook Form** - Form state management
-- **TanStack Table** - Data table utilities
+### 3\. Administrative Power
 
-### Backend & Database
-- **Next.js API Routes** - Serverless backend
-- **Prisma ORM** - Database abstraction
-- **PostgreSQL** - Primary database (Neon)
-- **Zod** - Schema validation
+  * **Comprehensive Analytics:** Track revenue, user growth, and popular courses.
+  * **User Governance:** Ban/Unban users, manage roles, and audit login attempts.
 
-### Authentication & Security
-- **Better-Auth** - Modern auth solution
-- **Resend** - Email delivery
-- **Arcjet** - DDoS and bot protection
-- **Next.js Middleware** - Request filtering
+-----
 
-### Payments & External Services
-- **Stripe** - Payment processing
-- **AWS S3** - File storage
-- **Next.js Image Optimization** - Image serving
+## 🛠️ Technical Stack
 
-### UI Components & Utilities
-- **Radix UI** - Headless UI primitives
-- **shadcn/ui** - Pre-built components
-- **Sonner** - Toast notifications
-- **Lucide React** - Icon library
+### **Frontend Mastery**
 
----
+| Technology | Usage |
+| :--- | :--- |
+| **Next.js 16** | Core framework, App Router, Server Components. |
+| **React 19** | New hook features (useActionState) and optimized rendering. |
+| **Tailwind CSS 4** | Ultra-fast JIT styling and design system. |
+| **Framer Motion** | Physics-based layout transitions. |
+| **GSAP** | Scroll-driven storytelling and high-performance DOM manipulation. |
+| **Shadcn UI** | Accessible, head-less UI components. |
+
+### **Backend & Database**
+
+| Technology | Usage |
+| :--- | :--- |
+| **Prisma 7** | Type-safe ORM for PostgreSQL. |
+| **PostgreSQL** | Relational data with high consistency. |
+| **Better-Auth** | Modern authentication with session management. |
+| **AWS S3** | Object storage for course videos and images. |
+| **Arcjet** | Runtime security and rate limiting. |
+
+-----
+
+## 📊 Database Schema
+
+Our PostgreSQL schema is designed for speed and relational integrity.
+
+### **Entity-Relationship Overview**
+
+  * **User:** Handles authentication, roles (ADMIN/STUDENT), and profiles.
+  * **Course:** Stores metadata, pricing, and ownership.
+  * **Chapter:** Organizes lessons into logical groups.
+  * **Lesson:** The atomic unit of content (Video URL, Content, Sorting order).
+  * **Enrollment:** Junction table linking Users to Courses with payment status.
+  * **Progress:** Tracks specific lesson completion per user.
+
+<!-- end list -->
+
+```prisma
+// Sample Slice
+model Course {
+  id          String       @id @default(cuid())
+  title       String
+  description String?      @db.Text
+  image       String?
+  price       Float?
+  isPublished Boolean      @default(false)
+  chapters    Chapter[]
+  enrollments Enrollment[]
+  createdAt   DateTime     @default(now())
+}
+```
+
+-----
+
+## 🔒 Security Implementation
+
+Security is not an afterthought. Learn-Stack implements:
+
+1.  **Bot Defense:** Arcjet analyzes every request to block scrapers and bad actors.
+2.  **Strict CORS:** Only authorized origins can access internal API routes.
+3.  **Webhook Validation:** Stripe events are validated using a signing secret to prevent "replay" attacks.
+4.  **Session Hardening:** Multi-device session tracking with the ability to "logout from all devices."
+5.  **Form Sanitization:** Zod schemas validate every input field before it reaches the DB.
+
+-----
+
+## 🎬 Animation Engine
+
+We utilize a hybrid animation strategy to keep the bundle small but the UI rich.
+
+### **The "Reveal" Pattern**
+
+We use a custom `ScrollReveal` component that leverages `IntersectionObserver`:
+
+```tsx
+<ScrollReveal direction="up" delay={0.2}>
+  <CourseCard data={course} />
+</ScrollReveal>
+```
+
+### **The "Smooth Scroll"**
+
+`Lenis` is used to normalize scrolling across platforms, providing a consistent "Apple-like" momentum scroll.
+
+-----
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ (recommended: 20 LTS)
-- pnpm (recommended over npm/yarn)
-- PostgreSQL 14+
-- Git
 
-### Installation
+  * **Node.js:** v20.x or higher
+  * **Package Manager:** `pnpm` (highly recommended)
+  * **Database:** A PostgreSQL instance (Neon, Supabase, or Local)
 
-1. **Clone the repository**
-```bash
-git clone https://github.com/shazid25/Learn-Stack.git
-cd Learn-Stack
-```
+### Installation Steps
 
-2. **Install dependencies**
-```bash
-pnpm install
-```
+1.  **Clone the Source**
 
-3. **Set up environment variables**
-```bash
-cp .env.example .env.local
-```
+    ```bash
+    git clone https://github.com/shazid25/Learn-Stack.git
+    cd Learn-Stack
+    ```
 
-Update `.env.local` with your credentials:
-```env
-# Database
-DATABASE_URL=postgresql://user:password@host:port/database
+2.  **Dependency Installation**
 
-# Authentication
-BETTER_AUTH_SECRET=your_secret_key
-BETTER_AUTH_URL=http://localhost:3000
+    ```bash
+    pnpm install
+    ```
 
-# OAuth
-AUTH_GITHUB_CLIENT_ID=your_github_client_id
-AUTH_GITHUB_SECRET=your_github_secret
-AUTH_GOOGLE_CLIENT_ID=your_google_client_id
-AUTH_GOOGLE_CLIENT_SECRET=your_google_client_secret
+3.  **Environment Setup**
+    Create a `.env.local` file and add the following:
 
-# Email
-RESEND_API_KEY=your_resend_api_key
-FROM_EMAIL=noreply@yourdomain.com
+    ```env
+    # APP
+    NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
-# Payment
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_PUBLISHABLE_KEY=pk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
+    # DATABASE
+    DATABASE_URL="postgresql://user:pass@host:5432/db"
 
-# File Storage
-AWS_ACCESS_KEY_ID=your_aws_access_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret_key
-AWS_REGION=auto
-AWS_ENDPOINT_URL_S3=https://t3.storage.dev
-NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES=your_bucket_name
+    # AUTH
+    BETTER_AUTH_SECRET="your_secret"
+    GOOGLE_CLIENT_ID="xxx"
+    GOOGLE_CLIENT_SECRET="xxx"
 
-# Security
-ARCJET_KEY=your_arcjet_key
+    # STRIPE
+    STRIPE_SECRET_KEY="sk_test_..."
+    STRIPE_WEBHOOK_SECRET="whsec_..."
 
-# Admin
-ADMIN_EMAIL=admin@yourdomain.com
-```
+    # AWS S3
+    AWS_ACCESS_KEY_ID="xxx"
+    AWS_SECRET_ACCESS_KEY="xxx"
+    S3_BUCKET_NAME="learn-stack-assets"
+    ```
 
-4. **Setup database**
-```bash
-pnpm prisma migrate dev
-```
+4.  **Database Push**
 
-5. **Seed database (optional)**
-```bash
-pnpm seed
-```
+    ```bash
+    pnpm prisma db push
+    ```
 
-6. **Start development server**
-```bash
-pnpm dev
-```
+5.  **Run Development**
 
-Visit `http://localhost:3000` to see the app.
+    ```bash
+    pnpm dev
+    ```
 
----
+-----
 
-## 📁 Project Structure
+## 📡 API Reference
 
-```
-Learn-Stack/
-├── app/                          # Next.js app directory
-│   ├── (auth)/                   # Authentication routes
-│   ├── (public)/                 # Public pages
-│   ├── admin/                    # Admin dashboard
-│   ├── api/                      # API routes
-│   ├── dashboard/                # Student dashboard
-│   └── layout.tsx                # Root layout
-├── components/
-│   ├── animations/               # Animation components
-│   ├── sidebar/                  # Sidebar components
-│   ├── ui/                       # UI primitives
-│   └── rich-text-editor/         # Content editor
-├── hooks/                        # React hooks
-│   ├── useAnimations.ts          # Animation hooks
-│   └── ...
-├── lib/
-│   ├── auth.ts                   # Auth configuration
-│   ├── auth-client.ts            # Auth client setup
-│   ├── db.ts                     # Database client
-│   ├── stripe.ts                 # Stripe client
-│   ├── S3Client.ts               # AWS S3 client
-│   ├── zodSchemas.ts             # Zod validation schemas
-│   └── utils.ts                  # Utility functions
-├── prisma/
-│   ├── schema.prisma             # Database schema
-│   └── migrations/               # Database migrations
-├── public/                       # Static assets
-└── package.json                  # Dependencies
-```
+### **Courses**
 
----
+| Method | Endpoint | Description | Access |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/courses` | List all published courses | Public |
+| `POST` | `/api/courses` | Create a new course draft | Admin |
+| `PATCH` | `/api/courses/[id]` | Update course details | Admin |
 
-## 🎬 Animation System
+### **Enrollment**
 
-Learn-Stack features a professional-grade animation system:
+| Method | Endpoint | Description | Access |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/checkout` | Create Stripe session | Student |
+| `GET` | `/api/user/courses` | List enrolled courses | Student |
 
-### AnimatedText
-Character and word stagger animations for text elements.
-```tsx
-<AnimatedText variant="words" delay={0.2}>
-  Your stunning text here
-</AnimatedText>
-```
+-----
 
-### ScrollReveal
-Scroll-triggered reveal animations with blur, scale, and direction options.
-```tsx
-<ScrollReveal direction="up" scale={true} blur={true}>
-  <div>Reveals on scroll</div>
-</ScrollReveal>
-```
+## 📈 Performance Benchmarks
 
-### CardReveal
-Spring physics animations for cards with stagger support.
-```tsx
-{items.map((item, index) => (
-  <CardReveal key={index} index={index}>
-    <Card>{item}</Card>
-  </CardReveal>
-))}
-```
+  * **Time to Interactive (TTI):** 1.2s
+  * **Blocking Time:** \< 50ms
+  * **Hydration Speed:** Optimized via `Next.js` partial hydration.
+  * **Image Optimization:** 70% reduction in asset size using `next/image` with WebP.
 
-### LenisScroll
-Smooth momentum-based scrolling for the entire application.
+-----
 
-📖 **Full Animation Documentation**: See [ANIMATION_GUIDE.md](./ANIMATION_GUIDE.md)
+## 🐛 Common Troubleshooting
 
----
+**Q: Prisma isn't generating types?**
 
-## 🔧 Available Commands
+  * Run `pnpm prisma generate` manually. Ensure your `output` path is correct in `schema.prisma`.
 
-```bash
-# Development
-pnpm dev              # Start dev server with Turbopack
-pnpm build            # Build for production
-pnpm start            # Start production server
-pnpm lint             # Run ESLint
+**Q: Stripe Webhooks failing?**
 
-# Database
-pnpm prisma studio   # Open Prisma Studio
-pnpm prisma migrate dev   # Create and apply migrations
-pnpm prisma generate  # Generate Prisma Client
+  * Use the Stripe CLI: `stripe listen --forward-to localhost:3000/api/webhook/stripe`.
 
-# Deployment
-pnpm build            # Production build
-# Deploy to Vercel (automatic on git push)
-```
+**Q: S3 Uploads blocked?**
 
----
+  * Check your CORS policy in the AWS Console. Ensure it allows your domain and the `PUT` method.
 
-## 📊 Database Schema
-
-### Core Models
-- **User** - User accounts with authentication
-- **Course** - Course information and metadata
-- **Chapter** - Course sections
-- **Lesson** - Individual lessons within chapters
-- **Enrollment** - User course enrollments
-- **LessonProgress** - Student lesson completion tracking
-- **ProjectSubmission** - Student project submissions
-- **Session** - User sessions for authentication
-- **Account** - OAuth account links
-- **VerificationToken** - Email verification tokens
-
-**See**: [prisma/schema.prisma](./prisma/schema.prisma)
-
----
-
-## 🔐 Security Features
-
-- ✅ **Rate Limiting** - Arcjet DDoS and rate limit protection
-- ✅ **Input Validation** - Zod schema validation on all endpoints
-- ✅ **CORS** - Restricted cross-origin requests
-- ✅ **Email Rate Limiting** - Prevent email abuse
-- ✅ **Session Security** - IP address logging and tracking
-- ✅ **Encryption** - Better-Auth handles password encryption
-- ✅ **OAuth** - Secure social authentication
-- ✅ **Webhook Verification** - Stripe webhook signature validation
-
----
-
-## 🚀 Deployment
-
-### Vercel (Recommended)
-1. Push code to GitHub
-2. Import project in Vercel
-3. Set environment variables
-4. Deploy automatically on push
-
-```bash
-# Or using Vercel CLI
-vercel deploy
-```
-
-### Environment Setup on Vercel
-- Add all `.env.local` variables to Vercel project settings
-- Ensure DATABASE_URL points to production database
-- Verify Stripe webhook is configured for production keys
-
----
-
-## 📈 Performance Metrics
-
-- **Lighthouse Score**: 90+ (performance, accessibility)
-- **FCP** (First Contentful Paint): < 1.5s
-- **LCP** (Largest Contentful Paint): < 2.5s
-- **Animation FPS**: Consistent 60fps (GPU-accelerated)
-- **Bundle Size**: Optimized with Next.js Turbopack
-
----
-
-## 🐛 Common Issues & Solutions
-
-### Database Connection Failed
-```bash
-# Check DATABASE_URL in .env.local
-# Verify Neon database is running
-# Reset migrations if needed
-pnpm prisma migrate reset --force
-```
-
-### Prisma Generate Error
-```bash
-# Remove old config files
-rm prisma.config.js prisma.config.ts
-
-# Regenerate
-pnpm prisma generate
-```
-
-### S3 Upload Failures
-```bash
-# Verify AWS credentials
-# Check bucket name and region
-# Ensure CORS is configured on bucket
-```
-
-### Stripe Webhook Not Triggering
-```bash
-# Verify STRIPE_WEBHOOK_SECRET in .env
-# Check webhook endpoint URL in Stripe dashboard
-# Test with Stripe CLI: stripe listen --forward-to localhost:3000/api/webhook/stripe
-```
-
----
-
-## 📚 Documentation
-
-- [Animation Guide](./ANIMATION_GUIDE.md) - Advanced animation usage
-- [Animation System Summary](./ANIMATION_SYSTEM_SUMMARY.md) - Implementation details
-- [Prisma Documentation](https://www.prisma.io/docs/)
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Stripe Documentation](https://stripe.com/docs)
-
----
+-----
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these steps:
+We love contributions\!
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1.  **Fork** the project.
+2.  **Create** your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3.  **Commit** your Changes (`git commit -m 'Add some AmazingFeature'`).
+4.  **Push** to the Branch (`git push origin feature/AmazingFeature`).
+5.  **Open** a Pull Request.
 
----
+-----
 
 ## 📝 License
 
-This project is **private**. All rights reserved.
+Distributed under the **Private License**. All Rights Reserved.
 
----
+-----
 
-## 👤 Author
+\<div align="center"\>
 
-**Shazid** - [@shazid25](https://github.com/shazid25)
+### **Developed with dedication by Shazid**
 
----
+**"Building the future of digital education, one commit at a time."**
 
-## 🎉 Acknowledgments
+[](https://github.com/shazid25)
 
-- [Next.js](https://nextjs.org) - React framework
-- [Prisma](https://www.prisma.io) - Database ORM
-- [Stripe](https://stripe.com) - Payment processing
-- [Framer Motion](https://www.framer.com/motion/) - Animation library
-- [Tailwind CSS](https://tailwindcss.com) - Styling
-- [shadcn/ui](https://ui.shadcn.com) - Component library
+[⬆ Back to Top](https://www.google.com/search?q=%23learn-stack-enterprise-learning-management-system)
 
----
+\</div\>
 
-## 🔗 Links
-
-- **Live Demo**: https://learn-stack-bot9.vercel.app/
-- **GitHub Repository**: https://github.com/shazid25/Learn-Stack
-- **Report Issues**: https://github.com/shazid25/Learn-Stack/issues
-
----
-
-<div align="center">
-
-**Made with ❤️ by Shazid**
-
-[⬆ Back to Top](#learn-stack)
-
-</div>
+-----
