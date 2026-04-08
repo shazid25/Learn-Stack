@@ -23,11 +23,27 @@ export default function Navbar() {
       name: "Courses",
       href: "/courses",
     },
+    {
+      name: "About",
+      href: "/about",
+    },
+    {
+      name: "Contact",
+      href: "/contact",
+    },
     ...(session
       ? [
           {
             name: "Dashboard",
             href: "/dashboard",
+          },
+          {
+            name: "Blog",
+            href: "/blog",
+          },
+          {
+            name: "Help",
+            href: "/help",
           },
         ]
       : []),

@@ -1,26 +1,20 @@
+"use server";
+
 import { prisma } from "@/lib/db";
 
 export async function getPopularCourses() {
   try {
     const courses = await prisma.course.findMany({
       where: {
-        status: "Published",
+        status: "Published", // DB-level filtering
       },
       take: 4,
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc", // DB-level ordering
       },
       include: {
-        chapter: {
-          select: {
-            id: true,
-          },
-        },
-        enrollment: {
-          select: {
-            id: true,
-          },
-        },
+        chapter: { select: { id: true } },
+        enrollment: { select: { id: true } },
       },
     });
 
@@ -36,7 +30,7 @@ export async function getPopularCourses() {
       slug: course.slug,
     }));
   } catch (error) {
-    console.error("Error fetching popular courses:", error);
+    console.error("Database Fetch Error:", error);
     return [];
   }
 }

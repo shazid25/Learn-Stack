@@ -13,16 +13,16 @@ export default function Footer() {
 
   const quickLinks = [
     { label: "Browse Courses", href: "/courses" },
-    { label: "Home", href: "/" },
-    { label: "About Us", href: "#" },
-    { label: "Contact", href: "#" },
+    { label: "About Us", href: "/about" },
+    { label: "Contact Us", href: "/contact" },
+    { label: "Blog", href: "/blog" },
   ];
 
   const learningLinks = [
-    { label: "Course Categories", href: "#" },
-    { label: "Become an Instructor", href: "#" },
-    { label: "Learning Paths", href: "#" },
-    { label: "Certificate Programs", href: "#" },
+    { label: "Knowledge Base", href: "/help" },
+    { label: "Terms of Service", href: "/terms" },
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Student Dashboard", href: "/dashboard" },
   ];
 
   return (

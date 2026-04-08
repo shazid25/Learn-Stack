@@ -2,17 +2,19 @@
 
 import * as React from "react";
 import {
-  IconCamera,
   IconChartBar,
   IconDashboard,
-  IconFileAi,
   IconFileDescription,
   IconFolder,
   IconHelp,
   IconListDetails,
-  IconSearch,
   IconSettings,
   IconUsers,
+  IconBook,
+  IconAward,
+  IconMessageChatbot,
+  IconLayoutDashboard,
+  IconUserCircle
 } from "@tabler/icons-react";
 
 import { NavMain } from "@/components/sidebar/nav-main";
@@ -30,125 +32,80 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "@/public/logo.png";
-
-const data = {
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/admin",
-      icon: IconDashboard,
-    },
-    {
-      title: "Courses",
-      url: "/admin/courses",
-      icon: IconListDetails,
-    },
-    {
-      title: "Analytics",
-      url: "/admin/analytics",
-      icon: IconChartBar,
-    },
-    {
-      title: "Projects",
-      url: "/admin/projects",
-      icon: IconFolder,
-    },
-    {
-      title: "Team",
-      url: "/admin/team",
-      icon: IconUsers,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: IconCamera,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: IconSettings,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: IconHelp,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: IconSearch,
-    },
-  ],
-};
+import { authClient } from "@/lib/auth-client";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session } = authClient.useSession();
+  const role = session?.user?.role || "user";
+
+  // Role-based navigation logic
+  const getNavItems = () => {
+    switch (role) {
+      case "admin":
+        return [
+          { title: "Admin Console", url: "/admin", icon: IconLayoutDashboard },
+          { title: "Course Manager", url: "/admin/courses", icon: IconListDetails },
+          { title: "User Analytics", url: "/admin/analytics", icon: IconChartBar },
+          { title: "Project Vault", url: "/admin/projects", icon: IconFolder },
+          { title: "Staff & Teams", url: "/admin/team", icon: IconUsers },
+          { title: "Global Settings", url: "/admin/settings", icon: IconSettings },
+        ];
+      case "manager":
+        return [
+          { title: "Management Hub", url: "/dashboard", icon: IconLayoutDashboard },
+          { title: "Team Performance", url: "/dashboard/team", icon: IconUsers },
+          { title: "Course Insights", url: "/dashboard/reports", icon: IconChartBar },
+          { title: "Review Board", url: "/dashboard/reviews", icon: IconFileDescription },
+        ];
+      default: // user
+        return [
+          { title: "My Dashboard", url: "/dashboard", icon: IconDashboard },
+          { title: "My Learning", url: "/dashboard/courses", icon: IconBook },
+          { title: "Achievements", url: "/dashboard/achievements", icon: IconAward },
+          { title: "AI Assistant", url: "/dashboard/ai-chat", icon: IconMessageChatbot },
+          { title: "Profile", url: "/dashboard/profile", icon: IconUserCircle },
+        ];
+    }
+  };
+
+  const secondaryNav = [
+    { title: "Support Center", url: "/help", icon: IconHelp },
+    { title: "Settings", url: "/dashboard/settings", icon: IconSettings },
+  ];
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className="border-b border-sidebar-border/50">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
+              size="lg"
+              className="data-[slot=sidebar-menu-button]:!px-2"
             >
               <Link href="/">
-                <Image src={Logo} alt="logo" className="size-5" />
-                <span className="text-base font-semibold">Learn Stack</span>
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-blue-600 text-sidebar-primary-foreground shadow-lg shadow-blue-600/20">
+                  <Image src={Logo} alt="logo" className="size-5 brightness-0 invert" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-bold text-slate-900 dark:text-white">Learn Stack</span>
+                  <span className="truncate text-xs text-slate-500 dark:text-slate-400">Premium LMS</span>
+                </div>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <div className="px-2 py-4">
+          <p className="px-3 mb-2 text-xs font-black text-slate-400 uppercase tracking-widest">
+            {role} Navigation
+          </p>
+          <NavMain items={getNavItems()} />
+        </div>
+        <NavSecondary items={secondaryNav} className="mt-auto border-t border-sidebar-border/50 p-2" />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-sidebar-border/50 p-4">
         <NavUser />
       </SidebarFooter>
     </Sidebar>

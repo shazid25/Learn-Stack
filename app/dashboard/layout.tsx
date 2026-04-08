@@ -1,25 +1,20 @@
 import { SiteHeader } from "@/components/sidebar/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ReactNode } from "react";
-import { AppSidebar } from "./_components/DashboardAppSidebar";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
-  const cookieStore = await (await import("next/headers")).cookies();
   const session = await auth.api.getSession({
-    headers: {
-      cookie: cookieStore.toString(),
-    },
+    headers: await headers(),
   });
 
   if (!session?.user) {
     redirect("/login");
   }
 
-  if (session?.user?.role === "admin") {
-    redirect("/admin");
-  }
   return (
     <SidebarProvider
       style={
