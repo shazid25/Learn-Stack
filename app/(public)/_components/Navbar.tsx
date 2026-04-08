@@ -31,19 +31,23 @@ export default function Navbar() {
       name: "Contact",
       href: "/contact",
     },
+    {
+      name: "Blog",
+      href: "/blog",
+    },
+    {
+      name: "FAQ",
+      href: "/faq",
+    },
+    {
+      name: "Help",
+      href: "/help",
+    },
     ...(session
       ? [
           {
             name: "Dashboard",
             href: "/dashboard",
-          },
-          {
-            name: "Blog",
-            href: "/blog",
-          },
-          {
-            name: "Help",
-            href: "/help",
           },
         ]
       : []),
@@ -55,10 +59,18 @@ export default function Navbar() {
           },
         ]
       : []),
+    ...(session?.user.role === "manager"
+      ? [
+          {
+            name: "Manager",
+            href: "/manager",
+          },
+        ]
+      : []),
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md transition-colors duration-300 animate-slide-down">
+    <header className="sticky top-0 z-50 w-full border-b border-white/20 dark:border-white/10 bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl transition-all duration-300 animate-slide-down shadow-xl">
       <div className="container flex min-h-16 items-center mx-auto px-4 md:px-6 lg:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2 mr-4 group">

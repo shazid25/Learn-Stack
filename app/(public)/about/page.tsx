@@ -1,10 +1,8 @@
-"use client";
-
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Users, Target, Shield, Zap, Award, Globe } from "lucide-react";
-import Image from "next/image";
+import { prisma } from "@/lib/db";
 
 const values = [
   { icon: Target, title: "Our Mission", desc: "To democratize high-quality education and make skill-building accessible to everyone, everywhere." },
@@ -12,14 +10,21 @@ const values = [
   { icon: Zap, title: "Innovation", desc: "Using AI and interactive tools to transform how people learn and retain knowledge." },
 ];
 
-const team = [
-  { name: "Sarah Chen", role: "Founder & CEO", image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&q=80" },
-  { name: "Marcus Thorne", role: "Head of Engineering", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80" },
-  { name: "Aisha Patel", role: "Curriculum Director", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80" },
-  { name: "David Kim", role: "AI Research Lead", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&q=80" },
-];
+export default async function AboutPage() {
+  const [userCount, courseCount, chapterCount, teamMembers] = await Promise.all([
+    prisma.user.count(),
+    prisma.course.count(),
+    prisma.chapter.count(),
+    prisma.user.findMany({
+      where: {
+        role: { in: ["admin", "manager"] },
+        NOT: { image: null }
+      },
+      take: 4,
+      orderBy: { createdAt: "asc" }
+    })
+  ]);
 
-export default function AboutPage() {
   return (
     <div className="py-24 space-y-32">
       
@@ -60,9 +65,9 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
             {[
-              { label: "Students", value: "250K+", icon: Users },
-              { label: "Courses", value: "850+", icon: Award },
-              { label: "Countries", value: "120+", icon: Globe },
+              { label: "Active Learners", value: `${Math.floor(userCount / 100) * 100}+`, icon: Users },
+              { label: "Expert Courses", value: `${courseCount}+`, icon: Award },
+              { label: "Lesson Chapters", value: `${chapterCount}+`, icon: Globe },
               { label: "Success Rate", value: "98%", icon: Zap },
             ].map((stat, i) => (
               <ScrollReveal key={i} direction="up" delay={i * 0.1}>
@@ -105,34 +110,36 @@ export default function AboutPage() {
       </section>
 
       {/* Team Section */}
-      <section className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <ScrollReveal direction="up">
-            <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">Meet the Visionaries</h2>
-            <p className="text-slate-600 dark:text-slate-400 text-lg max-w-2xl mx-auto">
-              A diverse team of experts dedicated to revolutionizing education.
-            </p>
-          </ScrollReveal>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {team.map((t, i) => (
-            <ScrollReveal key={i} direction="up" delay={i * 0.1}>
-              <div className="group text-center">
-                <div className="relative mb-6 mx-auto w-48 h-48">
-                  <div className="absolute inset-0 bg-blue-600 rounded-[2.5rem] rotate-6 group-hover:rotate-12 transition-transform opacity-10"></div>
-                  <img 
-                    src={t.image} 
-                    alt={t.name}
-                    className="w-full h-full object-cover rounded-[2.5rem] relative z-10 grayscale hover:grayscale-0 transition-all duration-500 scale-95 group-hover:scale-100"
-                  />
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white">{t.name}</h3>
-                <p className="text-sm font-bold text-blue-600 dark:text-blue-400 tracking-widest uppercase mt-1">{t.role}</p>
-              </div>
+      {teamMembers.length > 0 && (
+        <section className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <ScrollReveal direction="up">
+              <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">Meet the Visionaries</h2>
+              <p className="text-slate-600 dark:text-slate-400 text-lg max-w-2xl mx-auto">
+                A diverse team of experts dedicated to revolutionizing education.
+              </p>
             </ScrollReveal>
-          ))}
-        </div>
-      </section>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {teamMembers.map((t, i) => (
+              <ScrollReveal key={t.id} direction="up" delay={i * 0.1}>
+                <div className="group text-center">
+                  <div className="relative mb-6 mx-auto w-48 h-48">
+                    <div className="absolute inset-0 bg-blue-600 rounded-[2.5rem] rotate-6 group-hover:rotate-12 transition-transform opacity-10"></div>
+                    <img 
+                      src={t.image || `https://avatar.vercel.sh/${t.email}`} 
+                      alt={t.name}
+                      className="w-full h-full object-cover rounded-[2.5rem] relative z-10 grayscale hover:grayscale-0 transition-all duration-500 scale-95 group-hover:scale-100"
+                    />
+                  </div>
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">{t.name}</h3>
+                  <p className="text-sm font-bold text-blue-600 dark:text-blue-400 tracking-widest uppercase mt-1">{t.role}</p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </section>
+      )}
 
     </div>
   );

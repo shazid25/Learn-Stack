@@ -26,7 +26,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-200 border-t border-slate-200 dark:border-slate-800 transition-colors duration-300">
+    <footer className="footer-glass relative bg-white/40 dark:bg-slate-950/40 backdrop-blur-xl text-slate-700 dark:text-slate-200 border-t border-white/20 dark:border-white/10 transition-colors duration-300">
       {/* Animated background elements (dark mode only) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none dark:block hidden">
         <div className="absolute top-10 right-20 w-40 h-40 bg-blue-900/20 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>

@@ -26,6 +26,7 @@ model User {
   enrollment         Enrollment[]
   lessonProgress     LessonProgress[]
   projectSubmissions ProjectSubmission[]
+  blogs              Blog[]
   accounts           Account[]
   sessions           Session[]
 
@@ -75,6 +76,73 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Blog {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  excerpt   String
+  authorId  String
+  category  String
+  image     String?
+  slug      String   @unique
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("blog")
+}
+
+model FAQ {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  category  String
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("faq")
+}
+
+model HelpCategory {
+  id          String        @id @default(uuid())
+  title       String
+  description String
+  icon        String?
+  position    Int           @default(0)
+  articles    HelpArticle[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("help_category")
+}
+
+model HelpArticle {
+  id         String       @id @default(uuid())
+  title      String
+  content    String
+  categoryId String
+  category   HelpCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  position   Int          @default(0)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  @@map("help_article")
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("contact_message")
 }
 
 model Course {

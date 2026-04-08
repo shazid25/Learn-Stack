@@ -16,16 +16,70 @@ async function main() {
     if (!user) {
       console.log(`❌ User with email ${adminEmail} not found`);
       console.log("📝 Please create the user first by signing up");
-      return;
+    } else {
+      // Update role to admin
+      await prisma.user.update({
+        where: { email: adminEmail },
+        data: { role: "admin" },
+      });
+      console.log(`✅ User ${adminEmail} set as admin`);
     }
 
-    // Update role to admin
-    await prisma.user.update({
-      where: { email: adminEmail },
-      data: { role: "admin" },
-    });
+    // Seed FAQs
+    const faqCount = await prisma.fAQ.count();
+    if (faqCount === 0) {
+      await prisma.fAQ.createMany({
+        data: [
+          {
+            question: "What is Learn-Stack?",
+            answer: "Learn-Stack is a modern learning management system designed to help developers master full-stack development through project-based learning.",
+            category: "General",
+            position: 1,
+          },
+          {
+            question: "Are the courses suitable for beginners?",
+            answer: "Yes, we have courses ranging from beginner to advanced levels. Each course page clearly states the recommended skill level.",
+            category: "Courses",
+            position: 2,
+          },
+          {
+            question: "How do I get my certificate?",
+            answer: "Once you complete all lessons and projects in a course, your certificate will be automatically generated in your dashboard.",
+            category: "Certification",
+            position: 3,
+          },
+        ],
+      });
+      console.log("✅ Seeded FAQs");
+    }
 
-    console.log(`✅ User ${adminEmail} set as admin`);
+    // Seed Help Categories and Articles
+    const helpCategoryCount = await prisma.helpCategory.count();
+    if (helpCategoryCount === 0) {
+      const category = await prisma.helpCategory.create({
+        data: {
+          title: "Getting Started",
+          description: "Everything you need to know to start your learning journey.",
+          icon: "Zap",
+          position: 1,
+          articles: {
+            create: [
+              {
+                title: "How to enroll in a course",
+                content: "1. Browse our catalog\n2. Select a course\n3. Click 'Enroll Now'\n4. Complete the checkout if it's a paid course.",
+                position: 1,
+              },
+              {
+                title: "Managing your profile",
+                content: "You can update your name, email, and avatar in the profile settings within your dashboard.",
+                position: 2,
+              },
+            ],
+          },
+        },
+      });
+      console.log("✅ Seeded Help Center");
+    }
   } catch (error) {
     console.error("❌ Error:", error);
     process.exit(1);

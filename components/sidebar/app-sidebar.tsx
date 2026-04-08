@@ -52,10 +52,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ];
       case "manager":
         return [
-          { title: "Management Hub", url: "/dashboard", icon: IconLayoutDashboard },
-          { title: "Team Performance", url: "/dashboard/team", icon: IconUsers },
-          { title: "Course Insights", url: "/dashboard/reports", icon: IconChartBar },
-          { title: "Review Board", url: "/dashboard/reviews", icon: IconFileDescription },
+          { title: "Management Hub", url: "/manager", icon: IconLayoutDashboard },
+          { title: "Blog Manager", url: "/manager/blogs", icon: IconFileDescription },
+          { title: "FAQ Center", url: "/manager/faq", icon: IconMessageChatbot },
+          { title: "Help Library", url: "/manager/help", icon: IconHelp },
+          { title: "User Base", url: "/manager/users", icon: IconUsers },
         ];
       default: // user
         return [
@@ -69,7 +70,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   };
 
   const secondaryNav = [
-    { title: "Support Center", url: "/help", icon: IconHelp },
+    { title: "Help Center", url: "/help", icon: IconHelp },
+    { title: "FAQ Center", url: "/faq", icon: IconMessageChatbot },
     { title: "Settings", url: "/dashboard/settings", icon: IconSettings },
   ];
 

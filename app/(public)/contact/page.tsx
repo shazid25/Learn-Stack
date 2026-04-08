@@ -10,18 +10,26 @@ import { Button } from "@/components/ui/button";
 import { Mail, Phone, MapPin, Send, MessageSquare, Clock, Globe, Loader2, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 
+import { submitContactForm } from "@/app/data/contact-actions";
+
 export default function ContactPage() {
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSending(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsSending(false);
-    setIsSent(true);
-    toast.success("Message sent perfectly!");
+    
+    try {
+      const formData = new FormData(e.currentTarget);
+      await submitContactForm(formData);
+      setIsSent(true);
+      toast.success("Message sent perfectly!");
+    } catch (error) {
+      toast.error("Failed to send message. Please try again.");
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -82,20 +90,21 @@ export default function ContactPage() {
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div className="space-y-3">
                              <Label className="font-bold text-slate-700 dark:text-slate-300">Your Name</Label>
-                             <Input required className="py-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border-none font-medium focus-visible:ring-2 focus-visible:ring-blue-600" placeholder="John Doe" />
+                             <Input name="name" required className="py-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border-none font-medium focus-visible:ring-2 focus-visible:ring-blue-600" placeholder="John Doe" />
                           </div>
                           <div className="space-y-3">
                              <Label className="font-bold text-slate-700 dark:text-slate-300">Email Address</Label>
-                             <Input required type="email" className="py-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border-none font-medium focus-visible:ring-2 focus-visible:ring-blue-600" placeholder="john@example.com" />
+                             <Input name="email" required type="email" className="py-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border-none font-medium focus-visible:ring-2 focus-visible:ring-blue-600" placeholder="john@example.com" />
                           </div>
                        </div>
                        <div className="space-y-3">
                           <Label className="font-bold text-slate-700 dark:text-slate-300">Subject</Label>
-                          <Input required className="py-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border-none font-medium focus-visible:ring-2 focus-visible:ring-blue-600" placeholder="How can we help?" />
+                          <Input name="subject" required className="py-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border-none font-medium focus-visible:ring-2 focus-visible:ring-blue-600" placeholder="How can we help?" />
                        </div>
                        <div className="space-y-3">
                           <Label className="font-bold text-slate-700 dark:text-slate-300">Message</Label>
                           <textarea 
+                            name="message"
                             required 
                             className="w-full min-h-[180px] p-6 rounded-3xl bg-slate-50 dark:bg-slate-800 border-none text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all" 
                             placeholder="Type your message here..."
