@@ -62,7 +62,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         return [
           { title: "My Dashboard", url: "/dashboard", icon: IconDashboard },
           { title: "My Learning", url: "/dashboard/courses", icon: IconBook },
-          { title: "Achievements", url: "/dashboard/achievements", icon: IconAward },
           { title: "AI Assistant", url: "/dashboard/ai-chat", icon: IconMessageChatbot },
           { title: "Profile", url: "/dashboard/profile", icon: IconUserCircle },
         ];
