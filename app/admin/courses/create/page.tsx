@@ -158,11 +158,11 @@ export default function CourseCreationPage() {
                 name="smallDescription"
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel>Small Description</FormLabel>
+                    <FormLabel className="text-red-500">Small Description</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Small Description"
-                        className="min-h-[120px]"
+                        className="min-h-30"
                         {...field}
                       />
                     </FormControl>

@@ -158,7 +158,7 @@ export function EditCourseForm({ data } : iAppProps) {
           name="smallDescription"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel>Small Description</FormLabel>
+              <FormLabel className="text-red-500">Small Description</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Small Description"

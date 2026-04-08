@@ -61,9 +61,9 @@ export const courseSchema = z.object({
 
   smallDescription: z
     .string()
-    .min(3, { message: "small Description must be at least 3 characters long" })
+    .min(3, { message: "\u001b[31msmall Description must be at least 3 characters long\u001b[0m" })
     .max(200, {
-      message: "small Description must be at most 200 characters long",
+      message: "\u001b[31msmall Description must be at most 200 characters long\u001b[0m",
     }),
 
   slug: z.string().min(3, {
