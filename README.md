@@ -4,13 +4,6 @@
 
 # 🎓 Learn-Stack: Enterprise Learning Management System
 
-\<div align="center"\>
-
-**The ultimate full-stack solution for modern educators, built with the T3 Stack philosophy.**
-
-[Explore Demo](https://learn-stack-bot9.vercel.app/) • [Report Bug](https://github.com/shazid25/Learn-Stack/issues) • [Request Feature](https://github.com/shazid25/Learn-Stack/issues)
-
-\</div\>
 
 -----
 
@@ -25,24 +18,6 @@
 
 -----
 
------
-
-## 📖 Table of Contents
-
-1.  [Overview](https://www.google.com/search?q=%23-overview)
-2.  [Core Architecture](https://www.google.com/search?q=%23-core-architecture)
-3.  [Deep Dive: Features](https://www.google.com/search?q=%23-deep-dive-features)
-4.  [Technical Stack](https://www.google.com/search?q=%23-technical-stack)
-5.  [Database Schema](https://www.google.com/search?q=%23-database-schema)
-6.  [Security Implementation](https://www.google.com/search?q=%23-security-implementation)
-7.  [Animation Engine](https://www.google.com/search?q=%23-animation-engine)
-8.  [Getting Started](https://www.google.com/search?q=%23-getting-started)
-9.  [API Reference](https://www.google.com/search?q=%23-api-reference)
-10. [Performance Benchmarks](https://www.google.com/search?q=%23-performance-benchmarks)
-11. [Contributing](https://www.google.com/search?q=%23-contributing)
-12. [License](https://www.google.com/search?q=%23-license)
-
------
 
 ## 🎯 Overview
 
