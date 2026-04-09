@@ -14,6 +14,19 @@
 
 -----
 
+## Project Access
+Live Link: https://learn-stack-bot9.vercel.app/
+
+Admin Email: driveintocode@gmail.com
+Admin Password: driveintocode@gmail.com
+
+Manager Email: irfanshazd814@gmail.com
+Manager Password: irfanshazd814@gmail.com
+
+-----
+
+-----
+
 ## 📖 Table of Contents
 
 1.  [Overview](https://www.google.com/search?q=%23-overview)
