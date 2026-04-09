@@ -15,13 +15,13 @@
 -----
 
 ## Project Access
-Live Link: https://learn-stack-bot9.vercel.app/
+* **Live Link:** https://learn-stack-bot9.vercel.app/
 
-Admin Email: driveintocode@gmail.com
-Admin Password: driveintocode@gmail.com
+* **Admin Email:** driveintocode@gmail.com
+* **Admin Password:** driveintocode@gmail.com
 
-Manager Email: irfanshazd814@gmail.com
-Manager Password: irfanshazd814@gmail.com
+* **Manager Email:** irfanshazd814@gmail.com
+* **Manager Password:** irfanshazd814@gmail.com
 
 -----
 
