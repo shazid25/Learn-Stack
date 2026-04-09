@@ -9,10 +9,13 @@ import { authClient } from "@/lib/auth-client";
 import { buttonVariants } from "@/components/ui/button";
 import { UserDropdown } from "./UserDropdown";
 import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export default function Navbar() {
   const { data: session, isPending } = authClient.useSession();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const navigationItems = [
     {
@@ -83,16 +86,27 @@ export default function Navbar() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex md:flex-1 md:items-center md:justify-between">
           <div className="flex items-center space-x-1">
-            {navigationItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 transition-all duration-300 hover:text-blue-600 dark:hover:text-blue-400 rounded-md hover:bg-blue-50 dark:hover:bg-slate-800 relative group"
-              >
-                {item.name}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 dark:bg-blue-400 group-hover:w-full transition-all duration-300"></span>
-              </Link>
-            ))}
+            {navigationItems.map((item) => {
+              const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    "px-3 py-2 text-sm font-medium transition-all duration-300 rounded-md relative group",
+                    isActive
+                      ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-slate-800"
+                      : "text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800"
+                  )}
+                >
+                  {item.name}
+                  <span className={cn(
+                    "absolute bottom-0 left-0 h-0.5 bg-blue-600 dark:bg-blue-400 transition-all duration-300",
+                    isActive ? "w-full" : "w-0 group-hover:w-full"
+                  )}></span>
+                </Link>
+              );
+            })}
           </div>
 
           <div className="flex items-center space-x-4">
@@ -148,19 +162,30 @@ export default function Navbar() {
         <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 animate-slide-down">
           <div className="container mx-auto px-4 py-4">
             <nav className="flex flex-col space-y-2 mb-4">
-              {navigationItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-3 text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 rounded-md hover:bg-blue-50 dark:hover:bg-slate-800 transition-all duration-300 block group relative"
-                >
-                  <span className="relative">
-                    {item.name}
-                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 dark:bg-blue-400 group-hover:w-full transition-all duration-300"></span>
-                  </span>
-                </Link>
-              ))}
+              {navigationItems.map((item) => {
+                const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={cn(
+                      "px-4 py-3 text-sm font-medium rounded-md transition-all duration-300 block group relative",
+                      isActive
+                        ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-slate-800"
+                        : "text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-800"
+                    )}
+                  >
+                    <span className="relative">
+                      {item.name}
+                      <span className={cn(
+                        "absolute bottom-0 left-0 h-0.5 bg-blue-600 dark:bg-blue-400 transition-all duration-300",
+                        isActive ? "w-full" : "w-0 group-hover:w-full"
+                      )}></span>
+                    </span>
+                  </Link>
+                );
+              })}
             </nav>
 
             <div className="border-t border-slate-200 dark:border-slate-800 pt-4 flex flex-col gap-3">
