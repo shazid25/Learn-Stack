@@ -7,9 +7,7 @@ const prisma = new PrismaClient({
 
 async function main() {
   try {
-    console.log("Connecting to direct database...");
     await prisma.$connect();
-    console.log("Connected successfully!");
   } catch (error) {
     console.error("Database connection error:", error);
   } finally {

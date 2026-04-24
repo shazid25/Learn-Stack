@@ -4,7 +4,6 @@ async function main() {
   const adminEmail = process.env.ADMIN_EMAIL;
 
   if (!adminEmail) {
-    console.log("❌ ADMIN_EMAIL not set in .env");
     return;
   }
 
@@ -14,15 +13,13 @@ async function main() {
     });
 
     if (!user) {
-      console.log(`❌ User with email ${adminEmail} not found`);
-      console.log("📝 Please create the user first by signing up");
+      // User with email not found
     } else {
       // Update role to admin
       await prisma.user.update({
         where: { email: adminEmail },
         data: { role: "admin" },
       });
-      console.log(`✅ User ${adminEmail} set as admin`);
     }
 
     // Seed FAQs
@@ -50,7 +47,6 @@ async function main() {
           },
         ],
       });
-      console.log("✅ Seeded FAQs");
     }
 
     // Seed Help Categories and Articles
@@ -78,7 +74,6 @@ async function main() {
           },
         },
       });
-      console.log("✅ Seeded Help Center");
     }
   } catch (error) {
     console.error("❌ Error:", error);

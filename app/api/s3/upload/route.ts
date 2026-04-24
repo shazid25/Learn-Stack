@@ -36,15 +36,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
     }
 
-  const body = await request.json();
-  console.debug("S3 upload request body:", body);
+    const body = await request.json();
 
-  const validation = fileUploadSchema.safeParse(body);
+    const validation = fileUploadSchema.safeParse(body);
 
     if (!validation.success) {
       console.error("Validation errors:", validation.error);
       return NextResponse.json(
-        { error: "Invalid Request Body", details: validation.error.message },
+        { error: validation.error.message },
         { status: 400 }
       );
     }
@@ -90,7 +89,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("S3 upload error:", error);
     return NextResponse.json(
-      { error: "Failed to generate presigned URL", details: error instanceof Error ? error.message : "Unknown error" },
+      { error: "Failed to generate presigned URL" },
       { status: 500 }
     );
   }
