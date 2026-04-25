@@ -38,7 +38,7 @@ export function HeroSection() {
           </Badge>
         </ScrollReveal>
         
-        <h2 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white max-w-4xl">
+        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white max-w-4xl">
           <AnimatedText variant="words" delay={0.2} className="block">
             Unlock Your Potential with Learn-Stack
           </AnimatedText>
